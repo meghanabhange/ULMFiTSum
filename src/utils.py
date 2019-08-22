@@ -52,25 +52,25 @@ class DataHandler:
             logging.info(f"{ouput_unzip}")
         logging.info(f"{self.dataset_name} Downloaded")
 
-    def check_data_exists(self, name_of_dataset: str) -> bool:
+    def check_data_exists(self, name_of_dataset):
         """
         Checks the data folders existence
-        
+
         Arguments:
             name_of_dataset {[str]} -- [Name of the dataset to be downloaded]
-        
+
         Returns:
             [bool] -- [True is the data folder exists]
         """
         logging.info(f"Checking for : {name_of_dataset}")
-        exists = (self.data_path / name_of_dataset).exists()
+        exists = (str(self.data_path)/name_of_dataset).exists()
         logging.info(f"{name_of_dataset} Folder Existence status : {exists}")
         return exists
 
 
 def main():
     data_path = Path("./data")
-    data_handler = DataHandler(data_path)
+    data_handler = DataHandler(data_path, "Indosum")
 
 
 if __name__ == "__main__":
