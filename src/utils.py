@@ -23,10 +23,12 @@ class DataHandler:
         Downaloads Indosum in data_path/indosum.
         """
         logging.info("Downloading Indosum")
-        if not self.check_data_exists(self.dataset_name):
-            (self.data_path / self.dataset_name).mkdir(parents=True, exist_ok=True)
-        else:
-            logging.info("Folder already exists")
+        # if not self.check_data_exists(self.dataset_name):
+        #     (self.data_path / self.dataset_name).mkdir(parents=True, exist_ok=True)
+        # else:
+        #     logging.info("Folder already exists")
+
+        (self.data_path / self.dataset_name).mkdir(parents=True, exist_ok=True)
         if not (self.data_path / self.dataset_name / "indosum.tar.gz").exists():
             output_download = subprocess.check_output(
                 [
