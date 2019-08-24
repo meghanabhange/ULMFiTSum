@@ -6,7 +6,6 @@ that are required for Summarisation.
 """
 import logging
 import subprocess
-from pathlib import Path
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -68,10 +67,3 @@ class DataHandler:
         return exists
 
 
-def main():
-    data_path = Path("./data")
-    data_handler = DataHandler(data_path, "Indosum")
-
-
-if __name__ == "__main__":
-    main()
