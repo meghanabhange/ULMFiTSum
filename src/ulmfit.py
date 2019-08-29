@@ -12,12 +12,13 @@ logging.getLogger().setLevel(logging.INFO)
 class ULMFiT:
     def __init__(self):
         logging.info("ULMFiT model")
+
     def load_model(self, dataset_name):
         path = Path("./data")
         data_lm_path = f"data_lm_{dataset_name.lower()}.pkl"
         data_lm = self.load_data_lm(path, data_lm_path)
         logging.info("data_lm loaded")
-        model= get_language_model(AWD_LSTM, len(data_lm.vocab.itos))
+        model = get_language_model(AWD_LSTM, len(data_lm.vocab.itos))
         logging.info("Language Model")
         # model.reset()
         # model.eval()
@@ -29,7 +30,7 @@ class ULMFiT:
         logging.info("data_lm loaded")
         # Create a LM learner
         # learn = language_model_learner(data_lm, AWD_LSTM)
-        model= get_language_model(AWD_LSTM, len(data_lm.vocab.itos))
+        model = get_language_model(AWD_LSTM, len(data_lm.vocab.itos))
         logging.info("Language Model")
         learn = self.load_encoder(learn, path, dataset_name)
         logging.info("encoder loaded")

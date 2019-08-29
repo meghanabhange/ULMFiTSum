@@ -6,6 +6,7 @@ that are required for Summarisation.
 """
 import logging
 import subprocess
+from pathlib import Path
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -15,7 +16,7 @@ class DataHandler:
         self.data_path = data_path
         self.dataset_name = dataset_name
         logging.info(f"Data Handler Class Created - {data_path}")
-        if dataset_name == "Indosum":
+        if dataset_name.lower() == "indosum":
             self.download_indosum()
 
     def download_indosum(self):
@@ -62,6 +63,7 @@ class DataHandler:
             [bool] -- [True is the data folder exists]
         """
         logging.info(f"Checking for : {name_of_dataset}")
-        exists = (str(self.data_path) / name_of_dataset).exists()
+        exists = (self.data_path / name_of_dataset).exists()
         logging.info(f"{name_of_dataset} Folder Existence status : {exists}")
         return exists
+
