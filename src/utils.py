@@ -24,7 +24,7 @@ class DataHandler:
         if not (self.data_path / f"{download_type}.tar.gz").exists():
             google_drive_link = {
                 "indosum": "https://docs.google.com/uc?export=download&id=1OgYbPfXFAv3TbwP1Qcwt_CC9cVWSJaco",
-                "indo_lm": "https://drive.google.com/uc?export=download&id=1tWWi4TFTlNLFKtHGnQqAURKE0r8DPK9E",
+                "indo_lm": "https://drive.google.com/uc?export=download&id=1ez8QfKhAK5tL41usBq8K1mUQAUBjB7R1",
             }
             output_download = subprocess.check_output(
                 [
