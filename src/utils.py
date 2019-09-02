@@ -37,7 +37,7 @@ class DataHandler:
             )
             logging.info(f"{output_download}")
         if not (self.data_path / f"{download_type}").exists():
-            ouput_unzip = subprocess.check_output(
+            output_unzip = subprocess.check_output(
                 [
                     "tar",
                     "xvzf",
@@ -46,5 +46,5 @@ class DataHandler:
                     f"{self.data_path}",
                 ]
             )
-            logging.info(f"{ouput_unzip}")
+            logging.info(f"{output_unzip}")
         logging.info(f"{download_type} Downloaded")
