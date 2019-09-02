@@ -14,13 +14,13 @@ download_logger = logging.getLogger(name="download_logger").setLevel(logging.INF
 class DataHandler:
     def __init__(self, data_path):
         self.data_path = data_path
-        logging.info(f"Data Handler Class Created - {data_path}")
+        download_logger.info(f"Data Handler Class Created - {data_path}")
 
     def downloader(self, download_type):
         """
         Downaloads download_type in data_path/download_type.
         """
-        logging.info(f"Downloading {download_type}")
+        download_logger.info(f"Downloading {download_type}")
         if not (self.data_path / f"{download_type}.tar.gz").exists():
             google_drive_link = {
                 "indosum": "https://docs.google.com/uc?export=download&id=1OgYbPfXFAv3TbwP1Qcwt_CC9cVWSJaco",
@@ -35,7 +35,7 @@ class DataHandler:
                     f"{self.data_path/f'{download_type}.tar.gz'}",
                 ]
             )
-            logging.info(f"{output_download}")
+            download_logger.info(f"{output_download}")
         if not (self.data_path / f"{download_type}").exists():
             output_unzip = subprocess.check_output(
                 [
@@ -46,5 +46,5 @@ class DataHandler:
                     f"{self.data_path}",
                 ]
             )
-            logging.info(f"{output_unzip}")
-        logging.info(f"{download_type} Downloaded")
+            download_logger.info(f"{output_unzip}")
+        download_logger.info(f"{download_type} Downloaded")
