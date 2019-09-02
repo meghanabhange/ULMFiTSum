@@ -8,7 +8,7 @@ import logging
 import subprocess
 from pathlib import Path
 
-logging.getLogger().setLevel(logging.INFO)
+download_logger = logging.getLogger(name="download_logger").setLevel(logging.INFO)
 
 
 class DataHandler:
