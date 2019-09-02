@@ -26,13 +26,14 @@ class DataHandler:
                 "indosum": "https://docs.google.com/uc?export=download&id=1OgYbPfXFAv3TbwP1Qcwt_CC9cVWSJaco",
                 "indo_lm": "https://drive.google.com/uc?export=download&id=1ez8QfKhAK5tL41usBq8K1mUQAUBjB7R1",
             }
+            fname = f'{download_type}.tar.gz'
             output_download = subprocess.check_output(
                 [
                     "wget",
                     "--no-check-certificate",
                     google_drive_link[download_type],
                     "-O",
-                    f"{self.data_path/f'{download_type}.tar.gz'}",
+                    f"{self.data_path/fname}",
                 ]
             )
             download_logger.info(f"{output_download}")
