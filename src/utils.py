@@ -8,44 +8,35 @@ import logging
 import subprocess
 from pathlib import Path
 
-download_logger = logging.getLogger(name="download_logger").setLevel(logging.INFO)
+import gdown
+
+download_logger = logging.getLogger(name="download_logger")
+download_logger.setLevel(logging.INFO)
 
 
 class DataHandler:
     def __init__(self, data_path):
         self.data_path = data_path
         download_logger.info(f"Data Handler Class Created - {data_path}")
+        self.data_path.mkdir(parents=True, exist_ok=True)
 
     def downloader(self, download_type):
         """
         Downloads download_type in data_path/download_type.
         """
         download_logger.info(f"Downloading {download_type}")
-        if not (self.data_path / f"{download_type}.tar.gz").exists():
+        fname = f"{download_type}.tar.gz"
+        if not (self.data_path / fname).exists():
             google_drive_link = {
-                "indosum": "https://docs.google.com/uc?export=download&id=1OgYbPfXFAv3TbwP1Qcwt_CC9cVWSJaco",
-                "indo_lm": "https://drive.google.com/uc?export=download&id=1ez8QfKhAK5tL41usBq8K1mUQAUBjB7R1",
+                "indosum": "https://drive.google.com/uc?export=download&id=1OgYbPfXFAv3TbwP1Qcwt_CC9cVWSJaco",
+                "indo_lm": "https://drive.google.com/uc?export=download&id=14uhX9s43eKAsy7b94FV5mHn0vDeJc4YH",
             }
-            fname = f'{download_type}.tar.gz'
-            output_download = subprocess.check_output(
-                [
-                    "wget",
-                    "--no-check-certificate",
-                    google_drive_link[download_type],
-                    "-O",
-                    f"{self.data_path/fname}",
-                ]
-            )
-            download_logger.info(f"{output_download}")
+            url = google_drive_link[download_type]
+            output = f"{self.data_path/fname}"
+            gdown.download(url, output, quiet=False)
         if not (self.data_path / f"{download_type}").exists():
             output_unzip = subprocess.check_output(
-                [
-                    "tar",
-                    "xvzf",
-                    f"{self.data_path/f'{download_type}.tar.gz'}",
-                    "-C",
-                    f"{self.data_path}",
-                ]
+                ["tar", "xvzf", f"{self.data_path/fname}", "-C", f"{self.data_path}"]
             )
             download_logger.info(f"{output_unzip}")
         download_logger.info(f"{download_type} Downloaded")

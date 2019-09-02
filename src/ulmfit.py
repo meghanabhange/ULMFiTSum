@@ -1,12 +1,14 @@
-from fastai.text import *
-import sentencepiece as spm
-from fastai.callbacks import *
-import pandas as pd
 import logging
+
+import pandas as pd
+import sentencepiece as spm
 import torch
+from fastai.callbacks import *
+from fastai.text import *
 from torch.autograd import Variable
 
-download_logger = logging.getLogger(name="download_logger").setLevel(logging.INFO)
+download_logger = logging.getLogger(name="download_logger")
+download_logger.setLevel(logging.INFO)
 
 
 class ULMFiT:
