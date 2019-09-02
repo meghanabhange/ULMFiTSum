@@ -18,7 +18,7 @@ class DataHandler:
 
     def downloader(self, download_type):
         """
-        Downaloads download_type in data_path/download_type.
+        Downloads download_type in data_path/download_type.
         """
         download_logger.info(f"Downloading {download_type}")
         if not (self.data_path / f"{download_type}.tar.gz").exists():
