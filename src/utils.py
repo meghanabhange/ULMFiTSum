@@ -7,6 +7,9 @@ that are required for Summarisation.
 import logging
 import subprocess
 from pathlib import Path
+from fastai import *
+from fastai.text import *
+import sentencepiece as spm
 
 import gdown
 
@@ -40,3 +43,22 @@ class DataHandler:
             )
             download_logger.info(f"{output_unzip}")
         download_logger.info(f"{download_type} Downloaded")
+
+
+class LangTokenizer(BaseTokenizer):
+    def __init__(
+        self, lang: str, vocab_size: int = 60000, path_to_sp=f"data/sentencepiece/"
+    ):
+        self.lang = lang
+        self.vocab_size = vocab_size
+        self.sp = spm.SentencePieceProcessor()
+        self.sp.Load(path_to_sp + f"{lang}_lm.model")
+        self.vocab = Vocab(
+            [self.sp.IdToPiece(int(i)) for i in range(self.vocab_size)]
+        )  # Read about what this does exactly
+
+    def tokenizer(self, t: str) -> List[str]:
+        return self.sp.EncodeAsPieces(t)
+
+    def detokenizer(self, t: List[str]) -> str:
+        return self.sp.DecodePieces(t)
