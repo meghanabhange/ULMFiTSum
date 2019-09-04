@@ -6,62 +6,37 @@ that are required for Summarisation.
 """
 import logging
 import subprocess
+from pathlib import Path
 
-logging.getLogger().setLevel(logging.INFO)
+import gdown
+
+download_logger = logging.getLogger(name="download_logger")
+download_logger.setLevel(logging.INFO)
 
 
 class DataHandler:
-    def __init__(self, data_path, dataset_name):
+    def __init__(self, data_path):
         self.data_path = data_path
-        self.dataset_name = dataset_name
-        logging.info(f"Data Handler Class Created - {data_path}")
-        if dataset_name == "Indosum":
-            self.download_indosum()
+        download_logger.info(f"Data Handler Class Created - {data_path}")
+        self.data_path.mkdir(parents=True, exist_ok=True)
 
-    def download_indosum(self):
+    def downloader(self, download_type):
         """
-        Downaloads Indosum in data_path/indosum.
+        Downloads download_type in data_path/download_type.
         """
-        logging.info("Downloading Indosum")
-        if not self.check_data_exists(self.dataset_name):
-            (self.data_path / self.dataset_name).mkdir(parents=True, exist_ok=True)
-        else:
-            logging.info("Folder already exists")
-        if not (self.data_path / self.dataset_name / "indosum.tar.gz").exists():
-            output_download = subprocess.check_output(
-                [
-                    "wget",
-                    "--no-check-certificate",
-                    "https://docs.google.com/uc?export=download&id=1OgYbPfXFAv3TbwP1Qcwt_CC9cVWSJaco",
-                    "-O",
-                    f"{self.data_path/self.dataset_name/'indosum.tar.gz'}",
-                ]
+        download_logger.info(f"Downloading {download_type}")
+        fname = f"{download_type}.tar.gz"
+        if not (self.data_path / fname).exists():
+            google_drive_link = {
+                "indosum": "https://drive.google.com/uc?export=download&id=1OgYbPfXFAv3TbwP1Qcwt_CC9cVWSJaco",
+                "indo_lm": "https://drive.google.com/uc?export=download&id=14uhX9s43eKAsy7b94FV5mHn0vDeJc4YH",
+            }
+            url = google_drive_link[download_type]
+            output = f"{self.data_path/fname}"
+            gdown.download(url, output, quiet=False)
+        if not (self.data_path / f"{download_type}").exists():
+            output_unzip = subprocess.check_output(
+                ["tar", "xvzf", f"{self.data_path/fname}", "-C", f"{self.data_path}"]
             )
-            logging.info(f"{output_download}")
-        if not (self.data_path / self.dataset_name / "indosum").exists():
-            ouput_unzip = subprocess.check_output(
-                [
-                    "tar",
-                    "xvzf",
-                    f"{self.data_path/self.dataset_name/'indosum.tar.gz'}",
-                    "-C",
-                    f"{self.data_path/self.dataset_name}",
-                ]
-            )
-            logging.info(f"{ouput_unzip}")
-        logging.info(f"{self.dataset_name} Downloaded")
-
-    def check_data_exists(self, name_of_dataset):
-        """
-        Checks the data folders existence
-
-        Arguments:
-            name_of_dataset {[str]} -- [Name of the dataset to be downloaded]
-
-        Returns:
-            [bool] -- [True is the data folder exists]
-        """
-        logging.info(f"Checking for : {name_of_dataset}")
-        exists = (str(self.data_path) / name_of_dataset).exists()
-        logging.info(f"{name_of_dataset} Folder Existence status : {exists}")
-        return exists
+            download_logger.info(f"{output_unzip}")
+        download_logger.info(f"{download_type} Downloaded")

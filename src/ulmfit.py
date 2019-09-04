@@ -1,24 +1,27 @@
-from fastai.text import *
-import sentencepiece as spm
-from fastai.callbacks import *
-import pandas as pd
 import logging
+
+import pandas as pd
+import sentencepiece as spm
 import torch
+from fastai.callbacks import *
+from fastai.text import *
 from torch.autograd import Variable
 
-logging.getLogger().setLevel(logging.INFO)
+download_logger = logging.getLogger(name="download_logger")
+download_logger.setLevel(logging.INFO)
 
 
 class ULMFiT:
     def __init__(self):
-        logging.info("ULMFiT model")
+        download_logger.info("ULMFiT model")
+
     def load_model(self, dataset_name):
         path = Path("./data")
         data_lm_path = f"data_lm_{dataset_name.lower()}.pkl"
         data_lm = self.load_data_lm(path, data_lm_path)
-        logging.info("data_lm loaded")
-        model= get_language_model(AWD_LSTM, len(data_lm.vocab.itos))
-        logging.info("Language Model")
+        download_logger.info("data_lm loaded")
+        model = get_language_model(AWD_LSTM, len(data_lm.vocab.itos))
+        download_logger.info("Language Model")
         # model.reset()
         # model.eval()
 
@@ -26,20 +29,20 @@ class ULMFiT:
         path = Path("./data")
         data_lm_path = f"data_lm_{dataset_name.lower()}.pkl"
         data_lm = self.load_data_lm(path, data_lm_path)
-        logging.info("data_lm loaded")
+        download_logger.info("data_lm loaded")
         # Create a LM learner
         # learn = language_model_learner(data_lm, AWD_LSTM)
-        model= get_language_model(AWD_LSTM, len(data_lm.vocab.itos))
-        logging.info("Language Model")
+        model = get_language_model(AWD_LSTM, len(data_lm.vocab.itos))
+        download_logger.info("Language Model")
         learn = self.load_encoder(learn, path, dataset_name)
-        logging.info("encoder loaded")
+        download_logger.info("encoder loaded")
         return learn
 
     def load_encoder(self, learn, path, dataset_name):
         if (path / f"{dataset_name.lower()}_enc").exists():
             learn.load_encoder(f"{dataset_name.lower()}_enc")
         else:
-            logging.info("Encoder doesn't exist, Training the encoder")
+            download_logger.info("Encoder doesn't exist, Training the encoder")
             self.train_lm(learn, 1, 1e-3)
         return learn
 
@@ -50,7 +53,7 @@ class ULMFiT:
             )
             data_lm.save(data_lm_path)
         else:
-            logging.info(f"LM data pickle exists, loading {data_lm_path}")
+            download_logger.info(f"LM data pickle exists, loading {data_lm_path}")
             data_lm = load_data(path, data_lm_path)
         return data_lm
 
