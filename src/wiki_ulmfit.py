@@ -26,7 +26,7 @@ class WikiTrainer:
                 "data": "https://drive.google.com/uc?export=download&id=1-0gaC0bmYyMoUWIkGoH6fY6DUQTArMD3",
             }
         }
-        if not (self.path/'data_save.pkl').exists():
+        if not (self.path / "data_save.pkl").exists():
             gdown.download(
                 lang_dict[self.lang]["data"], f"{self.path}/data_save.pkl", quiet=False
             )
@@ -90,9 +90,7 @@ def main():
     wiki_trainer.download_wiki_files()
     wiki_trainer.load_data_lm()
     output_text = wiki_trainer.predict(
-        next_tok=20,
-        start="Saya Meghana,",
-        model_name="idwiki_encoder.enc",
+        next_tok=20, start="Saya Meghana,", model_name="idwiki_encoder.enc"
     )
     print(output_text.replace("▁", " "))
 
