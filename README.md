@@ -13,14 +13,6 @@ Summarisation Using ULMFiT Hopefully?
 
 ## wiki_ulmfit
 
-```python
-    wiki_trainer = WikiTrainer(Path("./data"))
-    wiki_trainer.load_data_lm()
-    output_text = wiki_trainer.predict(
-        next_tok=20,
-        start="Saya Meghana, Insinyur Pembelajaran dan Bahasa Dalam",
-        model_name="idwiki_encoder.enc",
-        enocder = True
-    )
-    print(output_text)
+```bash
+    python3 -m src.wiki_ulmfit predict --start "Saya Megs" --next_tok 10 --model_name idwiki_encoder.enc
 ```

@@ -1,5 +1,6 @@
 import logging
 
+import fire
 import gdown
 import sentencepiece as spm
 from fastai import *
@@ -12,30 +13,8 @@ logger = logging.getLogger()
 
 
 class WikiTrainer:
-    def __init__(self, path, lang="id"):
-        self.path = path
-        self.lang = lang
-
-    def download_wiki_files(self, wiki_text=False):
-        """
-        Downloads Processed Wikipedia from google drive. 
-        """
-        lang_dict = {
-            "id": {
-                "wiki": "https://drive.google.com/uc?export=download&id=10P95rNlMPuHyB57k40KFcZUlaXdFopUC",
-                "data": "https://drive.google.com/uc?export=download&id=1-0gaC0bmYyMoUWIkGoH6fY6DUQTArMD3",
-            }
-        }
-        if not (self.path / "data_save.pkl").exists():
-            gdown.download(
-                lang_dict[self.lang]["data"], f"{self.path}/data_save.pkl", quiet=False
-            )
-        if wiki_text:
-            gdown.download(
-                lang_dict[self.lang["wiki"]],
-                f"{self.path}/{self.lang}_wiki.txt",
-                quiet=False,
-            )
+    def __init__(self):
+        logger.info("I work--for now")
 
     def load_data_lm(self):
         """
@@ -61,7 +40,15 @@ class WikiTrainer:
         learn.fit_one_cycle(n_epocs, lr)
         learn.save(fname)
 
-    def predict(self, start: str, next_tok: int, model_name: str, encoder=True):
+    def predict(
+        self,
+        start: str,
+        next_tok: int,
+        model_name: str,
+        path="./data",
+        encoder=True,
+        lang="id",
+    ):
         """
         Predicts the next_tok(int) after a given seed string start
         
@@ -76,23 +63,20 @@ class WikiTrainer:
         Returns:
             [str] -- Ouput predicted string.
        """
+        self.path = Path(path)
+        self.lang = lang
+        self.load_data_lm()
         learn = language_model_learner(self.data_lm, AWD_LSTM, drop_mult=0.3)
         if encoder:
             learn.load_encoder(model_name)
         else:
             learn.load(model_name)
         output_text = learn.predict(start, next_tok)
-        return output_text
+        return output_text.replace("▁", "")
 
 
 def main():
-    wiki_trainer = WikiTrainer(Path("./data"))
-    wiki_trainer.download_wiki_files()
-    wiki_trainer.load_data_lm()
-    output_text = wiki_trainer.predict(
-        next_tok=20, start="Saya Meghana,", model_name="idwiki_encoder.enc"
-    )
-    print(output_text.replace("▁", " "))
+    fire.Fire(WikiTrainer)
 
 
 if __name__ == "__main__":
