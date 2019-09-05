@@ -1,9 +1,3 @@
-"""
-Let's start by creating some basic utilites
-that are required for Summarisation.
-
-1. Downloading the data for Indosum
-"""
 import logging
 import subprocess
 from pathlib import Path

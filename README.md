@@ -8,13 +8,13 @@ Summarisation Using ULMFiT Hopefully?
     python3 -m src.download --filename indosum
     python3 -m src.download --filename indo_lm
     python3 -m src.download --filename sentencepiece
+    python3 -m src.download --filename idwiki --lang id
 ```
 
 ## wiki_ulmfit
 
 ```python
     wiki_trainer = WikiTrainer(Path("./data"))
-    wiki_trainer.download_wiki_files()
     wiki_trainer.load_data_lm()
     output_text = wiki_trainer.predict(
         next_tok=20,
