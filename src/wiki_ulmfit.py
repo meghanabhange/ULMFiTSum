@@ -4,8 +4,8 @@ import fire
 import gdown
 import sentencepiece as spm
 from fastai import *
-from fastai.text import *
 from fastai.callbacks import *
+from fastai.text import *
 from gensim.corpora import WikiCorpus
 
 from src.utils import LangTokenizer
@@ -95,7 +95,7 @@ class WikiTrainer:
                 partial(
                     EarlyStoppingCallback,
                     monitor="Perplexity()",
-                    min_delta=0.01,
+                    min_delta=2,
                     patience=3,
                 )
             ],
