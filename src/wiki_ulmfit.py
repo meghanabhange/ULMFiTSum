@@ -48,6 +48,7 @@ class WikiTrainer:
         path="./data",
         encoder=True,
         lang="id",
+        **kwargs
     ):
         """
         Predicts the next_tok(int) after a given seed string start
@@ -71,7 +72,7 @@ class WikiTrainer:
             learn.load_encoder(model_name)
         else:
             learn.load(model_name)
-        output_text = learn.predict(start, next_tok)
+        output_text = learn.predict(start, next_tok, **kwargs)
         return output_text.replace("▁", "")
 
 
