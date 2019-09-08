@@ -33,19 +33,42 @@ def load_data_file(
 
 
 class WikiTrainer:
-    def __init__(self):
-        logger.info("I work--for now")
+    def __init__(
+        self, lr=5e-4, n_epocs=1, fname_out="idwiki-latest", load_pretrained=False
+    ):
+        self.lr = lr
+        self.n_epocs = n_epocs
+        self.fname_out = fname_out
+        self.load_pretrained = load_pretrained
 
-    def train(self, lr=5e-4, n_epocs=1, fname_out="idwiki-latest"):
+    def fit(self):
+        learn = load_language_model(load_pretrained=self.load_pretrained)
+        learn.fit_one_cycle(self.n_epocs, self.lr)
+        learn.save(self.fname_out)
+
+    def load_language_model(
+        self, model_name="idwiki_encoder.enc", encoder=True, load_pretrained=True
+    ):
+        self.data_lm = load_data_file(
+            path=self.path,
+            fname_pkl="data_save.pkl",
+            fname_text_file=f"{self.lang}_wiki.txt",
+            lang=self.lang,
+        )
         learn = language_model_learner(self.data_lm, AWD_LSTM, drop_mult=0.3)
-        learn.fit_one_cycle(n_epocs, lr)
-        learn.save(fname)
+        if not load_pretrained:
+            return learn
+        if encoder:
+            learn.load_encoder(model_name)
+        else:
+            learn.load(model_name)
+        return learn
 
     def predict(
         self,
         start: str,
         next_tok: int,
-        model_name: str,
+        model_name="idwiki_encoder.enc",
         path="./data",
         encoder=True,
         lang="id",
@@ -64,20 +87,10 @@ class WikiTrainer:
         
         Returns:
             [str] -- Ouput predicted string.
-       """
+        """
         self.path = Path(path)
         self.lang = lang
-        self.data_lm = load_data_file(
-            path=self.path,
-            fname_pkl="data_save.pkl",
-            fname_text_file=f"{self.lang}_wiki.txt",
-            lang=self.lang,
-        )
-        learn = language_model_learner(self.data_lm, AWD_LSTM, drop_mult=0.3)
-        if encoder:
-            learn.load_encoder(model_name)
-        else:
-            learn.load(model_name)
+        learn = load_language_model(model_name, encoder)
         output_text = learn.predict(start, next_tok, **kwargs)
         return output_text.replace("▁", "")
 
