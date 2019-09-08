@@ -5,6 +5,10 @@ Summarisation Using ULMFiT Hopefully?
 ## Download Data using Data Handler
 
 ```bash
+    python3 -m src.download --filename all
+
+    or 
+
     python3 -m src.download --filename indosum
     python3 -m src.download --filename indo_lm
     python3 -m src.download --filename sentencepiece
@@ -16,11 +20,11 @@ Summarisation Using ULMFiT Hopefully?
 Predict
 
 ```bash
-    python3 -m src.wiki_ulmfit predict --start "Saya Megs" --next_tok 10 --model_name idwiki_encoder.enc
+    python3 -m src.wiki_ulmfit predict --start "Saya Alex Turner" --next_tok 10 --model_name idwiki_encoder.enc
 ```
 
 Finetune
 
 ```bash
-    python3 -m src.wiki_ulmfit predict --start "Saya Megs" --next_tok 10 --model_name idwiki_encoder.enc
+    python3 -m src.wiki_ulmfit finetune 
 ```

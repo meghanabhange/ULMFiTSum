@@ -15,7 +15,7 @@ def get_filename(
 def download_wiki_files(path, wiki_text=False, lang="id"):
     """
         Downloads Processed Wikipedia from google drive. 
-        """
+    """
     lang_dict = {
         "id": {
             "wiki": "https://drive.google.com/uc?export=download&id=10P95rNlMPuHyB57k40KFcZUlaXdFopUC",
@@ -31,7 +31,13 @@ def download_wiki_files(path, wiki_text=False, lang="id"):
 def main():
     data_path, filename, wiki_text, lang = fire.Fire(get_filename)
     if filename == "idwiki":
-        download_wiki_files(data_path, wiki_text)
+        download_wiki_files(data_path, wiki_text, lang)
+    elif filename == "all":
+        data_handler = DataHandler(data_path)
+        data_handler.downloader("indosum")
+        data_handler.downloader("indo_lm")
+        data_handler.downloader("sentencepiece")
+        download_wiki_files(data_path, wiki_text, lang)
     else:
         data_handler = DataHandler(data_path)
         data_handler.downloader(filename)
