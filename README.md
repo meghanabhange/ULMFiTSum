@@ -20,11 +20,11 @@ Summarisation Using ULMFiT Hopefully?
 Predict
 
 ```bash
-    python3 -m src.wiki_ulmfit predict --start "Saya Alex Turner" --next_tok 10 --model_name idwiki_encoder.enc
+    python3 -m src.wiki_ulmfit predict --start "Alex Turner" --next_tok 10 --model_name indosum_encoder.enc
 ```
 
 Finetune
 
 ```bash
-    python3 -m src.wiki_ulmfit finetune 
+    python3 -m src.wiki_ulmfit finetune --pretrained_model_name idwiki_encoder.enc --databunch_fname data_save.pkl --lr 5e-5
 ```

@@ -10,7 +10,9 @@ from gensim.corpora import WikiCorpus
 
 from src.utils import LangTokenizer
 
+logging.basicConfig()
 logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def load_data_file(
@@ -52,20 +54,32 @@ class WikiTrainer:
 
     def finetune(
         self,
+        pretrained_model_name,
+        databunch_fname,
         path="./data",
         dataset="indosum",
         n_epocs=1,
-        lr=5e-4,
         fname_out="finetune_lm_latest",
         **finetune_args,
     ):
+        path = Path(path)
+        if not (path / "models" / f"{pretrained_model_name}.pth").exists():
+            logger.info(
+                f"{pretrained_model_name} does not exist, check {path/'models'/f'{pretrained_model_name}.pth'}"
+            )
+            return
+        if not (path / databunch_fname).exists():
+            logger.info(
+                f"{databunch_fname} does not exist, check {path/databunch_fname}"
+            )
+            return
         learn = self.load_language_model(
-            model_name="idwiki_encoder.enc",
+            model_name=pretrained_model_name,
             encoder=True,
             load_pretrained=True,
-            data_lm_fname_pkl="indosum_data.pkl",
+            databunch_fname=databunch_fname,
         )
-        learn.fit_one_cycle(n_epocs, lr, **finetune_args)
+        learn.fit_one_cycle(n_epocs, **finetune_args)
         learn.save(fname_out)
 
     def fit(self):
@@ -78,11 +92,11 @@ class WikiTrainer:
         model_name="idwiki_encoder.enc",
         encoder=True,
         load_pretrained=True,
-        data_lm_fname_pkl="data_save.pkl",
+        databunch_fname="data_save.pkl",
     ):
         self.data_lm = load_data_file(
             path=self.path,
-            fname_pkl=data_lm_fname_pkl,
+            fname_pkl=databunch_fname,
             fname_text_file=f"{self.lang}_wiki.txt",
             lang=self.lang,
         )
