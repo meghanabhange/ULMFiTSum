@@ -5,6 +5,7 @@ from pathlib import Path
 import gdown
 import sentencepiece as spm
 from fastai import *
+from fastai.callbacks import *
 from fastai.text import *
 
 download_logger = logging.getLogger(name="download_logger")
@@ -57,3 +58,29 @@ class LangTokenizer(BaseTokenizer):
 
     def detokenizer(self, t: List[str]) -> str:
         return self.sp.DecodePieces(t)
+
+
+class EarlyStoppingMod(TrackerCallback):
+    "A `TrackerCallback` that terminates training when monitored quantity stops improving."
+
+    def __init__(
+        self, learn: Learner, monitor: str = "valid_loss", expected_value: int = 0
+    ):
+        super().__init__(learn, monitor=monitor, mode="auto")
+        self.expected_value = expected_value
+
+    def on_train_begin(self, **kwargs: Any) -> None:
+        "Initialize inner arguments."
+        super().on_train_begin(**kwargs)
+
+    def on_epoch_end(self, epoch, **kwargs: Any) -> None:
+        "Compare the value monitored to its best score and maybe stop training."
+        current = self.get_monitor_value()
+        if not current:
+            return None
+        print(
+            f"Heyya, This is Current : {current} and expected value {self.expected_value}"
+        )
+        if current <= self.expected_value:
+            print(f"Whohoo! The current {monitor} is less than expected")
+            return {"stop_training": True}

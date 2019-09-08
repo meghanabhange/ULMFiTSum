@@ -7,7 +7,7 @@ from fastai import *
 from fastai.text import *
 from gensim.corpora import WikiCorpus
 
-from src.utils import LangTokenizer
+from src.utils import EarlyStoppingMod, LangTokenizer
 
 logger = logging.getLogger()
 
@@ -34,7 +34,13 @@ def load_data_file(
 
 class WikiTrainer:
     def __init__(
-        self, lr=5e-4, n_epocs=1, fname_out="idwiki-latest", load_pretrained=False, path = "./data", lang="id"
+        self,
+        lr=5e-4,
+        n_epocs=1,
+        fname_out="idwiki-latest",
+        load_pretrained=False,
+        path="./data",
+        lang="id",
     ):
         self.lr = lr
         self.n_epocs = n_epocs
@@ -45,7 +51,7 @@ class WikiTrainer:
 
     def finetune(
         self,
-        path = "./data",
+        path="./data",
         dataset="indosum",
         n_epocs=1,
         lr=5e-4,
@@ -79,7 +85,15 @@ class WikiTrainer:
             fname_text_file=f"{self.lang}_wiki.txt",
             lang=self.lang,
         )
-        learn = language_model_learner(self.data_lm, AWD_LSTM, drop_mult=0.3)
+        learn = language_model_learner(
+            self.data_lm,
+            AWD_LSTM,
+            drop_mult=0.3,
+            metrics=[accuracy, Perplexity()],
+            callback_fns=[
+                partial(EarlyStoppingMod, monitor="perplexity", expected_value=30)
+            ],
+        )
         if not load_pretrained:
             return learn
         if encoder:
