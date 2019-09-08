@@ -34,24 +34,48 @@ def load_data_file(
 
 class WikiTrainer:
     def __init__(
-        self, lr=5e-4, n_epocs=1, fname_out="idwiki-latest", load_pretrained=False
+        self, lr=5e-4, n_epocs=1, fname_out="idwiki-latest", load_pretrained=False, path = "./data", lang="id"
     ):
         self.lr = lr
         self.n_epocs = n_epocs
         self.fname_out = fname_out
         self.load_pretrained = load_pretrained
+        self.path = Path(path)
+        self.lang = lang
+
+    def finetune(
+        self,
+        path = "./data",
+        dataset="indosum",
+        n_epocs=1,
+        lr=5e-4,
+        fname_out="finetune_lm_latest",
+        **finetune_args,
+    ):
+        learn = self.load_language_model(
+            model_name="idwiki_encoder.enc",
+            encoder=True,
+            load_pretrained=True,
+            data_lm_fname_pkl="indosum_data.pkl",
+        )
+        learn.fit_one_cycle(n_epocs, lr, **finetune_args)
+        learn.save(fname_out)
 
     def fit(self):
-        learn = load_language_model(load_pretrained=self.load_pretrained)
+        learn = self.load_language_model(load_pretrained=self.load_pretrained)
         learn.fit_one_cycle(self.n_epocs, self.lr)
         learn.save(self.fname_out)
 
     def load_language_model(
-        self, model_name="idwiki_encoder.enc", encoder=True, load_pretrained=True
+        self,
+        model_name="idwiki_encoder.enc",
+        encoder=True,
+        load_pretrained=True,
+        data_lm_fname_pkl="data_save.pkl",
     ):
         self.data_lm = load_data_file(
             path=self.path,
-            fname_pkl="data_save.pkl",
+            fname_pkl=data_lm_fname_pkl,
             fname_text_file=f"{self.lang}_wiki.txt",
             lang=self.lang,
         )
