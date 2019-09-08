@@ -5,9 +5,10 @@ import gdown
 import sentencepiece as spm
 from fastai import *
 from fastai.text import *
+from fastai.callbacks import *
 from gensim.corpora import WikiCorpus
 
-from src.utils import EarlyStoppingMod, LangTokenizer
+from src.utils import LangTokenizer
 
 logger = logging.getLogger()
 
@@ -91,7 +92,12 @@ class WikiTrainer:
             drop_mult=0.3,
             metrics=[accuracy, Perplexity()],
             callback_fns=[
-                partial(EarlyStoppingMod, monitor="perplexity", expected_value=30)
+                partial(
+                    EarlyStoppingCallback,
+                    monitor="Perplexity()",
+                    min_delta=0.01,
+                    patience=3,
+                )
             ],
         )
         if not load_pretrained:
@@ -128,7 +134,7 @@ class WikiTrainer:
         """
         self.path = Path(path)
         self.lang = lang
-        learn = load_language_model(model_name, encoder)
+        learn = self.load_language_model(model_name, encoder)
         output_text = learn.predict(start, next_tok, **kwargs)
         return output_text.replace("▁", "")
 

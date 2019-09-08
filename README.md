@@ -13,6 +13,14 @@ Summarisation Using ULMFiT Hopefully?
 
 ## wiki_ulmfit
 
+Predict
+
+```bash
+    python3 -m src.wiki_ulmfit predict --start "Saya Megs" --next_tok 10 --model_name idwiki_encoder.enc
+```
+
+Finetune
+
 ```bash
     python3 -m src.wiki_ulmfit predict --start "Saya Megs" --next_tok 10 --model_name idwiki_encoder.enc
 ```
