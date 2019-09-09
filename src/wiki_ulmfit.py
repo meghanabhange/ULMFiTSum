@@ -74,6 +74,7 @@ class WikiTrainer:
             )
             return
         learn = self.load_language_model(
+            path = path,
             model_name=pretrained_model_name,
             encoder=True,
             load_pretrained=True,
@@ -83,19 +84,21 @@ class WikiTrainer:
         learn.save(fname_out)
 
     def fit(self):
-        learn = self.load_language_model(load_pretrained=self.load_pretrained)
+        learn = self.load_language_model(path=self.path, load_pretrained=self.load_pretrained)
         learn.fit_one_cycle(self.n_epocs, self.lr)
         learn.save(self.fname_out)
 
     def load_language_model(
         self,
+        path,
         model_name="idwiki_encoder.enc",
         encoder=True,
         load_pretrained=True,
         databunch_fname="data_save.pkl",
     ):
+        path = Path(path)
         self.data_lm = load_data_file(
-            path=self.path,
+            path=path,
             fname_pkl=databunch_fname,
             fname_text_file=f"{self.lang}_wiki.txt",
             lang=self.lang,
@@ -146,9 +149,9 @@ class WikiTrainer:
         Returns:
             [str] -- Ouput predicted string.
         """
-        self.path = Path(path)
+        path = Path(path)
         self.lang = lang
-        learn = self.load_language_model(model_name, encoder)
+        learn = self.load_language_model(path=path, model_name=model_name, encoder=encoder)
         output_text = learn.predict(start, next_tok, **kwargs)
         return output_text.replace("▁", "")
 
