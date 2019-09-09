@@ -74,7 +74,7 @@ class WikiTrainer:
             )
             return
         learn = self.load_language_model(
-            path = path,
+            path=path,
             model_name=pretrained_model_name,
             encoder=True,
             load_pretrained=True,
@@ -84,7 +84,9 @@ class WikiTrainer:
         learn.save(fname_out)
 
     def fit(self):
-        learn = self.load_language_model(path=self.path, load_pretrained=self.load_pretrained)
+        learn = self.load_language_model(
+            path=self.path, load_pretrained=self.load_pretrained
+        )
         learn.fit_one_cycle(self.n_epocs, self.lr)
         learn.save(self.fname_out)
 
@@ -151,7 +153,9 @@ class WikiTrainer:
         """
         path = Path(path)
         self.lang = lang
-        learn = self.load_language_model(path=path, model_name=model_name, encoder=encoder)
+        learn = self.load_language_model(
+            path=path, model_name=model_name, encoder=encoder
+        )
         output_text = learn.predict(start, next_tok, **kwargs)
         return output_text.replace("▁", "")
 
