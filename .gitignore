@@ -104,3 +104,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+.DS_Store
+.gitignore
+indo_lm.tar.gz
+src/models/idwiki_encoder.enc.pth
+src/models/idwiki.pth
