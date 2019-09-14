@@ -109,3 +109,4 @@ venv.bak/
 indo_lm.tar.gz
 src/models/idwiki_encoder.enc.pth
 src/models/idwiki.pth
+.prpre-commit.swp
