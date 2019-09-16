@@ -37,6 +37,8 @@ def main():
         data_handler.downloader("indosum")
         data_handler.downloader("indo_lm")
         data_handler.downloader("sentencepiece")
+        data_handler.downloader("cnn_stories")
+        data_handler.downloader("dailymail_stories")
         download_wiki_files(data_path, wiki_text, lang)
     else:
         data_handler = DataHandler(data_path)
