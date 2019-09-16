@@ -28,6 +28,8 @@ class DataHandler:
                 "indosum": "https://drive.google.com/uc?export=download&id=1OgYbPfXFAv3TbwP1Qcwt_CC9cVWSJaco",
                 "indo_lm": "https://drive.google.com/uc?export=download&id=1p9JSui5R2aRHLCh_gKgD1X0H5b3sVrsE",
                 "sentencepiece": "https://drive.google.com/uc?export=download&id=1bWmSiHhp6i8xsA6AZuL4sGjzbFfNCTyt",
+                "cnn_stories": "https://drive.google.com/uc?export=download&id=0BwmD_VLjROrfTHk4NFg2SndKcjQ",
+                "dailymail_stories": "https://drive.google.com/uc?export=download&id=0BwmD_VLjROrfM1BxdkxVaTY2bWs",
             }
             url = google_drive_link[download_file_name]
             output = f"{self.data_path/fname}"
