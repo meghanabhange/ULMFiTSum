@@ -12,7 +12,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def load_LM_databunch(path, filename, *flags, **params):
+def load_LM_databunch(path, filename, bs=64, *flags, **params):
     if "use_sentencepiece" in flags:
         tokenizer = Tokenizer(tok_func=LangTokenizer, lang=lang)
     else:
@@ -20,7 +20,9 @@ def load_LM_databunch(path, filename, *flags, **params):
 
     if "from_folder" in flags:
         if not (path / f"{filename}.pkl").exists() or "force" in flags:
-            databunch = TextLMDataBunch.from_folder(path, filename, tokenizer=tokenizer)
+            databunch = TextLMDataBunch.from_folder(
+                path, filename, tokenizer=tokenizer, bs=bs
+            )
             if "save" in flags:
                 databunch.save(file=params["output_filename"])
         else:
@@ -29,7 +31,9 @@ def load_LM_databunch(path, filename, *flags, **params):
 
     if "from_csv" in flags:
         if not (path / f"{filename}.pkl").exists() or "force" in flags:
-            databunch = TextLMDataBunch.from_csv(path, filename, tokenizer=tokenizer)
+            databunch = TextLMDataBunch.from_csv(
+                path, filename, tokenizer=tokenizer, bs=bs
+            )
             if "save" in flags:
                 databunch.save(file=params["output_filename"])
         else:
